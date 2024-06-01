@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.2.0](https://github.com/roughapp/discord-bot/releases/tag/v1.2.0) - 2024-06-01
+
+- [`1bcabfd`](https://github.com/roughapp/discord-bot/commit/1bcabfd70db40cb1d5d482212f1fbaca3afc65d1) feat(env): 🎉 Add environment management with zod for validation
+
 ## [v1.1.0](https://github.com/roughapp/discord-bot/releases/tag/v1.1.0) - 2024-06-01
 
 - [`3d83ddb`](https://github.com/roughapp/discord-bot/commit/3d83ddb3d57c56f493cbca6a1f589429355443ad) feat(config): add uplift config for version bumps 🎉🤖
