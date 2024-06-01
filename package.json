@@ -1,0 +1,29 @@
+{
+  "name": "@roughapp/discord-bot",
+  "private": true,
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "type": "module",
+  "author": {
+    "name": "George Czabania"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "vitest --watch=false",
+    "tidy": "biome check --apply-unsafe ./src",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@stayradiated/error-boundary": "4.3.0",
+    "better-sqlite3": "10.0.0",
+    "discord.js": "14.15.2",
+    "dotenv": "16.4.5",
+    "kysely": "0.27.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.7.3",
+    "@types/better-sqlite3": "7.6.10",
+    "typescript": "5.4.5",
+    "vitest": "1.6.0"
+  }
+}
