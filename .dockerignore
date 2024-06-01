@@ -1,0 +1,8 @@
+# by default we exclude everything from the Docker worker...
+*
+
+# ... and then we whitelist the files we need
+!/package.json
+!/pnpm-lock.yaml
+!/src
+!/tsconfig.json

@@ -7,7 +7,7 @@
   "author": {
     "name": "George Czabania"
   },
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "test": "vitest --watch=false",
     "tidy": "biome check --apply-unsafe ./src",
