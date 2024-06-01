@@ -5,7 +5,6 @@ import {
   Routes,
   SlashCommandBuilder,
 } from 'discord.js'
-import { config } from 'dotenv'
 
 import type { GuildId, UserId } from './database.js'
 
@@ -17,25 +16,17 @@ import { upsertGuild } from './db/guild/upsert-guild.js'
 import { migrateToLatest } from './migrate.js'
 
 import { failure, warning } from './discord-utils.js'
+import { env } from './env.js'
 
 import * as roughApi from './rough-api/index.js'
 
 await migrateToLatest(db)
 
-config()
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] })
-
-const discordBotToken = process.env.BOT_TOKEN
-const discordClientId = process.env.CLIENT_ID
-
-if (!discordBotToken || !discordClientId) {
-  throw new Error('Missing environment variables.')
-}
 
 const rest = new REST({
   version: '10',
-}).setToken(discordBotToken)
+}).setToken(env.BOT_TOKEN)
 
 const insightCommand = new SlashCommandBuilder()
   .setName('insight')
@@ -82,7 +73,7 @@ const roughCommand = new SlashCommandBuilder()
 try {
   console.log('Started refreshing application (/) commands.')
 
-  await rest.put(Routes.applicationCommands(discordClientId), {
+  await rest.put(Routes.applicationCommands(env.CLIENT_ID), {
     body: [roughCommand, insightCommand],
   })
 
@@ -332,4 +323,4 @@ client.on('interactionCreate', async (interaction) => {
   }
 })
 
-client.login(process.env.BOT_TOKEN)
+client.login(env.BOT_TOKEN)

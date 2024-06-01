@@ -1,6 +1,8 @@
 import SqliteDatabase from 'better-sqlite3'
 import { CamelCasePlugin, Kysely, SqliteDialect } from 'kysely'
 
+import { env } from './env.js'
+
 type GuildId = string & { __brand: 'guildId' }
 type UserId = string & { __brand: 'userId' }
 
@@ -34,7 +36,7 @@ type KyselyDb = Kysely<Database>
 
 const db: KyselyDb = new Kysely({
   dialect: new SqliteDialect({
-    database: async () => new SqliteDatabase('state.db'),
+    database: async () => new SqliteDatabase(env.DB_PATH),
   }),
   plugins: [new CamelCasePlugin()],
 })
