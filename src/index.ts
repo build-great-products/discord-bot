@@ -1,5 +1,7 @@
 import {
+  ApplicationCommandType,
   Client,
+  ContextMenuCommandBuilder,
   GatewayIntentBits,
   REST,
   Routes,
@@ -9,7 +11,6 @@ import {
 import type { GuildId, UserId } from './database.js'
 
 import { db } from './database.js'
-import { getGuildUser } from './db/guild-user/get-guild-user.js'
 import { upsertGuildUser } from './db/guild-user/upsert-guild-user.js'
 import { getGuild } from './db/guild/get-guild.js'
 import { upsertGuild } from './db/guild/upsert-guild.js'
@@ -20,9 +21,17 @@ import { env } from './env.js'
 
 import * as roughApi from './rough-api/index.js'
 
+import { createInsight } from './create-insight.js'
+
 await migrateToLatest(db)
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] })
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+  ],
+})
 
 const rest = new REST({
   version: '10',
@@ -70,11 +79,15 @@ const roughCommand = new SlashCommandBuilder()
       ),
   )
 
+const contextMenu = new ContextMenuCommandBuilder()
+  .setName('Insight')
+  .setType(ApplicationCommandType.Message)
+
 try {
   console.log('Started refreshing application (/) commands.')
 
   await rest.put(Routes.applicationCommands(env.CLIENT_ID), {
-    body: [roughCommand, insightCommand],
+    body: [contextMenu, roughCommand, insightCommand],
   })
 
   console.log('Successfully reloaded application (/) commands.')
@@ -90,6 +103,43 @@ client.on('error', (error) => {
   console.error(error)
 })
 
+client.on('messageCreate', async (message) => {
+  // triggers whenever any message is sent...
+  if (!message.mentions.users.has(message.client.user.id)) {
+    console.log('Ignoring: Message does not mention bot')
+    return
+  }
+
+  const guildId = message.guildId as GuildId
+  if (!guildId) {
+    throw new Error('Guild ID is missing.')
+  }
+
+  if (message.reference?.messageId) {
+    const reference = await message.channel.messages.fetch(
+      message.reference.messageId,
+    )
+    const userId = reference.author.id as UserId
+    const content = reference.content
+    if (!content) {
+      await message.reply(failure('You must text for the insight.'))
+      return
+    }
+
+    const response = await createInsight({
+      db,
+      guildId,
+      userId,
+      content,
+      responseMode: 'only-error',
+    })
+    if (response) {
+      await message.reply(response)
+    }
+    await reference.react('📌')
+  }
+})
+
 client.on('interactionCreate', async (interaction) => {
   const guildId = interaction.guildId as GuildId
   if (!guildId) {
@@ -101,7 +151,34 @@ client.on('interactionCreate', async (interaction) => {
     throw new Error('User ID is missing.')
   }
 
-  if (interaction.isAutocomplete()) {
+  if (interaction.isContextMenuCommand()) {
+    if (interaction.commandName === 'Insight') {
+      const message = await interaction.channel?.messages.fetch(
+        interaction.targetId,
+      )
+      if (!message) {
+        await interaction.reply(failure('Could not find message'))
+        return
+      }
+      const content = message.content
+      if (!content) {
+        await interaction.reply(failure('You must text for the insight.'))
+        return
+      }
+      const response = await createInsight({
+        db,
+        guildId,
+        userId,
+        content,
+      })
+      if (response) {
+        await interaction.reply(response)
+      }
+    }
+    await interaction.reply(
+      warning(`Unrecognised command: \`${interaction.commandName}\``),
+    )
+  } else if (interaction.isAutocomplete()) {
     const guild = await getGuild({ db, where: { guildId } })
     if (guild instanceof Error) {
       await interaction.respond([
@@ -268,57 +345,20 @@ client.on('interactionCreate', async (interaction) => {
     return
   }
   if (commandName === 'insight') {
-    const guild = await getGuild({ db, where: { guildId } })
-    if (guild instanceof Error) {
-      await interaction.reply(
-        warning(
-          'This guild is not yet connected to Rough. Please use the `/rough connect` command to connect it.',
-        ),
-      )
-      return
-    }
-
-    const apiToken = guild.apiToken
-
-    const guildUser = await getGuildUser({ db, where: { guildId, userId } })
-    if (guildUser instanceof Error) {
-      await interaction.reply(
-        warning(
-          'Before you can use the `/insight` command, please use the `/rough identify` command to identify yourself.',
-        ),
-      )
-      return
-    }
-
     const text = options.getString('text')
     if (!text) {
       await interaction.reply(failure('You must text for the insight.'))
       return
     }
 
-    try {
-      console.log('Creating insight:', text)
-
-      const note = await roughApi.createNote({
-        apiToken,
-        title: 'Discord Insight',
-        content: text,
-        createdByUserId: guildUser.roughUserId,
-      })
-      if (note instanceof Error) {
-        await interaction.reply(failure('Failed to create insight.', note))
-        return
-      }
-
-      await interaction.reply(
-        `${text} [📌](https://in.rough.app/workspace/${guild.roughWorkspacePublicId}/insight/active, "View in Rough")`,
-      )
-    } catch (error) {
-      console.error(error)
-      await interaction.reply({
-        content: '⚠️ Failed to create insight.',
-        ephemeral: true,
-      })
+    const response = await createInsight({
+      db,
+      guildId,
+      userId,
+      content: text,
+    })
+    if (response) {
+      await interaction.reply(response)
     }
   }
 })
