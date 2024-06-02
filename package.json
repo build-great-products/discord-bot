@@ -8,6 +8,9 @@
     "name": "George Czabania"
   },
   "license": "MIT",
+  "imports": {
+    "#src/*": "./dist/*"
+  },
   "scripts": {
     "test": "vitest --watch=false",
     "tidy": "biome check --apply-unsafe ./src",
