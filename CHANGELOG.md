@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.6.0](https://github.com/roughapp/discord-bot/releases/tag/v1.6.0) - 2024-06-02
+
+- [`f573837`](https://github.com/roughapp/discord-bot/commit/f573837a77c1ced35acc675c9f24b22768344286) feat(commands): add command prefix functionality 🎉
+
 ## [v1.5.0](https://github.com/roughapp/discord-bot/releases/tag/v1.5.0) - 2024-06-02
 
 - [`134c9f8`](https://github.com/roughapp/discord-bot/commit/134c9f884e6a85f1f7143080be20699d3f799873) feat(insight&reference): 📌 Add reference URL support to insights and create references
