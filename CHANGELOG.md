@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.4.0](https://github.com/roughapp/discord-bot/releases/tag/v1.4.0) - 2024-06-02
+
+- [`435e8d5`](https://github.com/roughapp/discord-bot/commit/435e8d5decd45d8803b7ed93fedb99a2e6704441) feat: support custom titles when tagging @rough bot
+- [`9514634`](https://github.com/roughapp/discord-bot/commit/95146347a1687fee188501beae2450af9724cb34) refactor: restrcture into multiple files
+
 ## [v1.3.0](https://github.com/roughapp/discord-bot/releases/tag/v1.3.0) - 2024-06-01
 
 - [`5e7f5da`](https://github.com/roughapp/discord-bot/commit/5e7f5daad24140a364d20347cf565be4097bc32c) feat(insight): add create-insight feature 🎉✨
