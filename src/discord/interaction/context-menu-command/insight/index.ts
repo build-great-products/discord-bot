@@ -26,6 +26,7 @@ const onContextMenuInsight: ContextMenuCommandHandler = async (options) => {
     guildId,
     userId,
     content,
+    referenceUrl: message.url,
   })
   if (success) {
     await message.react('📌')

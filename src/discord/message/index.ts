@@ -62,6 +62,7 @@ const onMessage: MessageHandler = async (options) => {
     userId,
     title: title.length > 0 ? title : undefined,
     content,
+    referenceUrl: referenceMessage.url,
   })
 
   if (success) {

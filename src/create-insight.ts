@@ -17,12 +17,20 @@ type CreateInsightOptions = {
   userId: UserId
   title?: string
   content: string
+  referenceUrl?: string
 }
 
 const createInsight = async (
   options: CreateInsightOptions,
 ): Promise<{ success: boolean; reply: Reply }> => {
-  const { db, guildId, userId, title = 'Discord Insight', content } = options
+  const {
+    db,
+    guildId,
+    userId,
+    title = 'Discord Insight',
+    content,
+    referenceUrl,
+  } = options
 
   const guild = await getGuild({ db, where: { guildId } })
   if (guild instanceof Error) {
@@ -36,11 +44,32 @@ const createInsight = async (
     return { success: false, reply: userNotIdentifiedReply }
   }
 
+  let referenceId: string | undefined
+
+  if (referenceUrl) {
+    const snippet =
+      content.length > 40 ? `${content.trim().slice(0, 40).trim()}…` : content
+
+    const reference = await roughApi.createReference({
+      apiToken,
+      name: `Discord: "${snippet}"`,
+      url: referenceUrl,
+    })
+    if (reference instanceof Error) {
+      return {
+        success: false,
+        reply: failure('Could not createReference', reference),
+      }
+    }
+    referenceId = reference.id
+  }
+
   const note = await roughApi.createNote({
     apiToken,
     title,
     content,
     createdByUserId: guildUser.roughUserId,
+    referenceId,
   })
   if (note instanceof Error) {
     return { success: false, reply: failure('Could not createNote', note) }

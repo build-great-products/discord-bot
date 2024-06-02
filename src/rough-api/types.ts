@@ -33,4 +33,10 @@ type Workspace = {
   icon: string
 }
 
-export type { Note, User, Workspace }
+type Reference = {
+  id: string
+  name: string
+  url: string
+}
+
+export type { Note, User, Workspace, Reference }

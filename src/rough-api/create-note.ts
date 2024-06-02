@@ -7,12 +7,15 @@ type CreateNoteOptions = {
   title: string
   content: string
   createdByUserId: string
+  referenceId?: string
+  customerId?: string
 }
 
 const createNote = async (
   options: CreateNoteOptions,
 ): Promise<Note | Error> => {
-  const { apiToken, title, content, createdByUserId } = options
+  const { apiToken, title, content, createdByUserId, referenceId, customerId } =
+    options
 
   return errorBoundary(async () => {
     const response = await fetch('https://in.rough.app/api/v1/note', {
@@ -25,6 +28,8 @@ const createNote = async (
         title,
         content,
         createdByUserId,
+        referenceId,
+        customerId,
       }),
     })
     if (!response.ok) {
