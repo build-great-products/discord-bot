@@ -14,39 +14,60 @@ type MessageHandler = (options: MessageOptions) => Promise<void>
 const onMessage: MessageHandler = async (options) => {
   const { db, message } = options
 
-  // triggers whenever any message is sent...
+  // This hangler triggers whenever any message is sent.
+  // We must be very careful about infinite loops.
+  //
+  // We only want to respond to messages that mention the bot.
+  // And ignore messages that are sent by the bot itself.
+
+  if (message.author.id === message.client.user.id) {
+    console.info('Ignoring: Message sent by bot')
+    return
+  }
   if (!message.mentions.users.has(message.client.user.id)) {
-    console.log('Ignoring: Message does not mention bot')
+    console.info('Ignoring: Message does not mention bot')
     return
   }
 
-  const guildId = message.guildId as GuildId
+  const guildId = message.guildId as GuildId | null
   if (!guildId) {
     throw new Error('Guild ID is missing.')
   }
 
-  if (message.reference?.messageId) {
-    const reference = await message.channel.messages.fetch(
-      message.reference.messageId,
-    )
-    const userId = reference.author.id as UserId
-    const content = reference.content
-    if (!content) {
-      await message.reply(failure('You must text for the insight.'))
-      return
-    }
+  const userId = message.author.id as UserId
 
-    const response = await createInsight({
-      db,
-      guildId,
-      userId,
-      content,
-      responseMode: 'only-error',
-    })
-    if (response) {
-      await message.reply(response)
-    }
-    await reference.react('📌')
+  const referenceMessageId = message.reference?.messageId
+
+  if (!referenceMessageId) {
+    await message.reply(
+      failure('Please reply to a message to capture an insight.'),
+    )
+    return
+  }
+
+  const title = message.content.replace(/<@\d+>/g, '').trim()
+
+  const referenceMessage =
+    await message.channel.messages.fetch(referenceMessageId)
+
+  const content = referenceMessage.content
+  if (content.trim().length === 0) {
+    await message.reply(failure('The insight text cannot be empty.'))
+    return
+  }
+
+  const { success, reply } = await createInsight({
+    db,
+    guildId,
+    userId,
+    title: title.length > 0 ? title : undefined,
+    content,
+  })
+
+  if (success) {
+    await referenceMessage.react('📌')
+  } else {
+    await message.reply(reply)
   }
 }
 

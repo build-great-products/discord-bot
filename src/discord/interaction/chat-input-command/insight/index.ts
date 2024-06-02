@@ -13,15 +13,13 @@ const onChatInputCommandInsight: ChatInputCommandHandler = async (options) => {
     return
   }
 
-  const response = await createInsight({
+  const { reply } = await createInsight({
     db,
     guildId,
     userId,
     content: text,
   })
-  if (response) {
-    await interaction.reply(response)
-  }
+  await interaction.reply(reply)
 }
 
 export { onChatInputCommandInsight }

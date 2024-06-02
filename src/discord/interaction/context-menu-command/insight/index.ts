@@ -21,14 +21,20 @@ const onContextMenuInsight: ContextMenuCommandHandler = async (options) => {
     return
   }
 
-  const response = await createInsight({
+  const { success, reply } = await createInsight({
     db,
     guildId,
     userId,
     content,
   })
-  if (response) {
-    await interaction.reply(response)
+  if (success) {
+    await message.react('📌')
+    await interaction.reply({
+      content: '✅ Captured insight successfully.',
+      ephemeral: true,
+    })
+  } else {
+    await interaction.reply(reply)
   }
 }
 

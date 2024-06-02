@@ -17,31 +17,23 @@ type CreateInsightOptions = {
   userId: UserId
   title?: string
   content: string
-  responseMode?: 'only-error' | 'full'
 }
 
 const createInsight = async (
   options: CreateInsightOptions,
-): Promise<Reply | undefined> => {
-  const {
-    db,
-    guildId,
-    userId,
-    title = 'Discord Insight',
-    content,
-    responseMode = 'full',
-  } = options
+): Promise<{ success: boolean; reply: Reply }> => {
+  const { db, guildId, userId, title = 'Discord Insight', content } = options
 
   const guild = await getGuild({ db, where: { guildId } })
   if (guild instanceof Error) {
-    return guildNotConnectedReply
+    return { success: false, reply: guildNotConnectedReply }
   }
 
   const apiToken = guild.apiToken
 
   const guildUser = await getGuildUser({ db, where: { guildId, userId } })
   if (guildUser instanceof Error) {
-    return userNotIdentifiedReply
+    return { success: false, reply: userNotIdentifiedReply }
   }
 
   const note = await roughApi.createNote({
@@ -51,15 +43,15 @@ const createInsight = async (
     createdByUserId: guildUser.roughUserId,
   })
   if (note instanceof Error) {
-    return failure('Could not createNote', note)
+    return { success: false, reply: failure('Could not createNote', note) }
   }
 
-  if (responseMode === 'full') {
-    return {
+  return {
+    success: true,
+    reply: {
       content: `${content} [📌](https://in.rough.app/workspace/${guild.roughWorkspacePublicId}/insight/active "View in Rough")`,
-    }
+    },
   }
-  return undefined
 }
 
 export { createInsight }
