@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.7.0](https://github.com/roughapp/discord-bot/releases/tag/v1.7.0) - 2024-06-03
+
+- [`fb05086`](https://github.com/roughapp/discord-bot/commit/fb050860e6eecda054ec90b4bde4c46aea3caee1) feat(insight): add customer creation feature 🎉
+
 ## [v1.6.0](https://github.com/roughapp/discord-bot/releases/tag/v1.6.0) - 2024-06-02
 
 - [`f573837`](https://github.com/roughapp/discord-bot/commit/f573837a77c1ced35acc675c9f24b22768344286) feat(commands): add command prefix functionality 🎉
