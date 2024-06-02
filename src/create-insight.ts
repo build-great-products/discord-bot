@@ -18,6 +18,7 @@ type CreateInsightOptions = {
   title?: string
   content: string
   referenceUrl?: string
+  customerName?: string
 }
 
 const createInsight = async (
@@ -30,6 +31,7 @@ const createInsight = async (
     title = 'Discord Insight',
     content,
     referenceUrl,
+    customerName,
   } = options
 
   const guild = await getGuild({ db, where: { guildId } })
@@ -45,6 +47,7 @@ const createInsight = async (
   }
 
   let referenceId: string | undefined
+  let customerId: string | undefined
 
   if (referenceUrl) {
     const snippet =
@@ -64,12 +67,27 @@ const createInsight = async (
     referenceId = reference.id
   }
 
+  if (customerName) {
+    const customer = await roughApi.createCustomer({
+      apiToken,
+      name: customerName,
+    })
+    if (customer instanceof Error) {
+      return {
+        success: false,
+        reply: failure('Could not createCustomer', customer),
+      }
+    }
+    customerId = customer.id
+  }
+
   const note = await roughApi.createNote({
     apiToken,
     title,
     content,
     createdByUserId: guildUser.roughUserId,
     referenceId,
+    customerId,
   })
   if (note instanceof Error) {
     return { success: false, reply: failure('Could not createNote', note) }

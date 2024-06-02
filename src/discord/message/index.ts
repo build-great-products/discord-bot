@@ -45,7 +45,8 @@ const onMessage: MessageHandler = async (options) => {
     return
   }
 
-  const title = message.content.replace(/<@\d+>/g, '').trim()
+  const customerName =
+    message.content.replace(/<@\d+>/g, '').trim() || undefined
 
   const referenceMessage =
     await message.channel.messages.fetch(referenceMessageId)
@@ -60,9 +61,9 @@ const onMessage: MessageHandler = async (options) => {
     db,
     guildId,
     userId,
-    title: title.length > 0 ? title : undefined,
     content,
     referenceUrl: referenceMessage.url,
+    customerName,
   })
 
   if (success) {

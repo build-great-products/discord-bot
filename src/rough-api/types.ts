@@ -39,4 +39,9 @@ type Reference = {
   url: string
 }
 
-export type { Note, User, Workspace, Reference }
+type Customer = {
+  id: string
+  name: string
+}
+
+export type { Note, User, Workspace, Reference, Customer }
