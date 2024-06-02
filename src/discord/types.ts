@@ -11,6 +11,7 @@ type AutocompleteOptions = {
   interaction: AutocompleteInteraction
   guildId: GuildId
   userId: UserId
+  commandPrefix: string
 }
 
 type AutocompleteHandler = (options: AutocompleteOptions) => Promise<void>
@@ -20,6 +21,7 @@ type ContextMenuCommandOptions = {
   interaction: ContextMenuCommandInteraction
   guildId: GuildId
   userId: UserId
+  commandPrefix: string
 }
 
 type ContextMenuCommandHandler = (
@@ -31,6 +33,7 @@ type ChatInputCommandOptions = {
   interaction: ChatInputCommandInteraction
   guildId: GuildId
   userId: UserId
+  commandPrefix: string
 }
 
 type ChatInputCommandHandler = (

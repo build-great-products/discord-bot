@@ -10,4 +10,5 @@ await createClient({
   db,
   botToken: env.BOT_TOKEN,
   clientId: env.CLIENT_ID,
+  commandPrefix: env.COMMAND_PREFIX,
 })

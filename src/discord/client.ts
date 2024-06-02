@@ -10,6 +10,8 @@ import {
 
 import type { KyselyDb } from '#src/database.js'
 
+import { joinPrefix } from './prefix.js'
+
 import { onInteraction } from './interaction/index.js'
 import { onMessage } from './message/index.js'
 
@@ -17,10 +19,11 @@ type CreateClientOptions = {
   db: KyselyDb
   clientId: string
   botToken: string
+  commandPrefix: string
 }
 
 const createClient = async (options: CreateClientOptions) => {
-  const { db, clientId, botToken } = options
+  const { db, clientId, botToken, commandPrefix } = options
 
   const client = new Client({
     intents: [
@@ -33,7 +36,7 @@ const createClient = async (options: CreateClientOptions) => {
   const rest = new REST({ version: '10' }).setToken(botToken)
 
   const insightCommand = new SlashCommandBuilder()
-    .setName('insight')
+    .setName(joinPrefix(commandPrefix, 'insight'))
     .setDescription('Create an insight')
     .addStringOption((option) =>
       option
@@ -43,7 +46,7 @@ const createClient = async (options: CreateClientOptions) => {
     )
 
   const roughCommand = new SlashCommandBuilder()
-    .setName('rough')
+    .setName(joinPrefix(commandPrefix, 'rough'))
     .setDescription('Commands for Rough')
     .addSubcommand((subcommand) =>
       subcommand
@@ -75,7 +78,7 @@ const createClient = async (options: CreateClientOptions) => {
     )
 
   const contextMenu = new ContextMenuCommandBuilder()
-    .setName('Insight')
+    .setName(joinPrefix(commandPrefix, 'Insight'))
     .setType(ApplicationCommandType.Message)
 
   try {
@@ -103,7 +106,7 @@ const createClient = async (options: CreateClientOptions) => {
   })
 
   client.on('interactionCreate', async (interaction) => {
-    await onInteraction({ db, interaction })
+    await onInteraction({ db, interaction, commandPrefix })
   })
 
   client.login(botToken)

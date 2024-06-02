@@ -9,11 +9,12 @@ import { onContextMenuCommand } from './context-menu-command/index.js'
 type InteractionOptions = {
   db: KyselyDb
   interaction: Interaction
+  commandPrefix: string
 }
 type InteractionHandler = (options: InteractionOptions) => Promise<void>
 
 const onInteraction: InteractionHandler = async (options) => {
-  const { db, interaction } = options
+  const { interaction } = options
 
   const guildId = interaction.guildId as GuildId
   if (!guildId) {
@@ -26,11 +27,11 @@ const onInteraction: InteractionHandler = async (options) => {
   }
 
   if (interaction.isContextMenuCommand()) {
-    await onContextMenuCommand({ db, interaction, guildId, userId })
+    await onContextMenuCommand({ ...options, interaction, guildId, userId })
   } else if (interaction.isAutocomplete()) {
-    await onAutocomplete({ db, interaction, guildId, userId })
+    await onAutocomplete({ ...options, interaction, guildId, userId })
   } else if (interaction.isChatInputCommand()) {
-    await onChatInputCommand({ db, interaction, guildId, userId })
+    await onChatInputCommand({ ...options, interaction, guildId, userId })
   }
 }
 
