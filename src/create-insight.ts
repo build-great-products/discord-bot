@@ -15,7 +15,6 @@ type CreateInsightOptions = {
   db: KyselyDb
   guildId: GuildId
   userId: UserId
-  title?: string
   content: string
   referenceUrl?: string
   customerName?: string
@@ -24,15 +23,7 @@ type CreateInsightOptions = {
 const createInsight = async (
   options: CreateInsightOptions,
 ): Promise<{ success: boolean; reply: Reply }> => {
-  const {
-    db,
-    guildId,
-    userId,
-    title = 'Discord Insight',
-    content,
-    referenceUrl,
-    customerName,
-  } = options
+  const { db, guildId, userId, content, referenceUrl, customerName } = options
 
   const guild = await getGuild({ db, where: { guildId } })
   if (guild instanceof Error) {
@@ -83,7 +74,6 @@ const createInsight = async (
 
   const note = await roughApi.createNote({
     apiToken,
-    title,
     content,
     createdByUserId: guildUser.roughUserId,
     referenceId,

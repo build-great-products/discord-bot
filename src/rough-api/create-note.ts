@@ -4,7 +4,6 @@ import type { Note } from './types.js'
 
 type CreateNoteOptions = {
   apiToken: string
-  title: string
   content: string
   createdByUserId: string
   referenceId?: string
@@ -14,7 +13,7 @@ type CreateNoteOptions = {
 const createNote = async (
   options: CreateNoteOptions,
 ): Promise<Note | Error> => {
-  const { apiToken, title, content, createdByUserId, referenceId, customerId } =
+  const { apiToken, content, createdByUserId, referenceId, customerId } =
     options
 
   return errorBoundary(async () => {
@@ -25,7 +24,6 @@ const createNote = async (
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        title,
         content,
         createdByUserId,
         referenceId,

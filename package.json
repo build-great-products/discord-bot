@@ -13,7 +13,7 @@
   },
   "scripts": {
     "test": "vitest --watch=false",
-    "tidy": "biome check --apply-unsafe ./src",
+    "tidy": "biome check --write --unsafe ./src",
     "build": "tsc"
   },
   "dependencies": {
@@ -25,7 +25,7 @@
     "zod": "3.23.8"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.7.3",
+    "@biomejs/biome": "1.8.1",
     "@types/better-sqlite3": "7.6.10",
     "typescript": "5.4.5",
     "vitest": "1.6.0"
