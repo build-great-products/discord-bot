@@ -51,10 +51,15 @@ const onMessage: MessageHandler = async (options) => {
   const referenceMessage =
     await message.channel.messages.fetch(referenceMessageId)
 
-  const content = referenceMessage.content
+
+  let content = referenceMessage.content
   if (content.trim().length === 0) {
     await message.reply(failure('The insight text cannot be empty.'))
     return
+  }
+
+  if (referenceMessage.author.id !== userId) {
+    content = `${referenceMessage.author.username} wrote: ${content}`
   }
 
   const { success, reply } = await createInsight({

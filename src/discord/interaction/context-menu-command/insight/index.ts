@@ -15,10 +15,14 @@ const onContextMenuInsight: ContextMenuCommandHandler = async (options) => {
     return
   }
 
-  const content = message.content
+  let content = message.content
   if (content.trim().length === 0) {
     await interaction.reply(failure('The insight text cannot be empty.'))
     return
+  }
+
+  if (message.author.id !== userId) {
+    content = `${message.author.username} said: ${content}`
   }
 
   const { success, reply } = await createInsight({
