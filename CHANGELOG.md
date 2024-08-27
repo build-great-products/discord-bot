@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.8.0](https://github.com/build-great-products/discord-bot/releases/tag/v1.8.0) - 2024-08-27
+
+- [`22418cb`](https://github.com/build-great-products/discord-bot/commit/22418cb5bc6c03e90456c3f5858f29423aec083c) feat: include author's username for non-self messages
+- [`f0024dd`](https://github.com/build-great-products/discord-bot/commit/f0024dd435d1f4a2bb668adbbf9a2ef7eb270b07) refactor: remove `title` field from create-insight
+
 ## [v1.7.0](https://github.com/roughapp/discord-bot/releases/tag/v1.7.0) - 2024-06-03
 
 - [`fb05086`](https://github.com/roughapp/discord-bot/commit/fb050860e6eecda054ec90b4bde4c46aea3caee1) feat(insight): add customer creation feature 🎉
