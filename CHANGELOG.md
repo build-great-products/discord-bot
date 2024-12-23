@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
+## [v1.10.0](https://github.com/build-great-products/discord-bot/releases/tag/v1.10.0) - 2024-12-24
+
+- [`b276ba5`](https://github.com/build-great-products/discord-bot/commit/b276ba51cdd0d73ce9ee9b6f7087df4a8060b1f7) feat: Add Watchtower notification step in release workflow 🔔
+
 ## [v1.9.0](https://github.com/build-great-products/discord-bot/releases/tag/v1.9.0) - 2024-12-24
 
 - [`e66d717`](https://github.com/build-great-products/discord-bot/commit/e66d7175f91d9efc7c835d0518f6a144b0035d97) Merge pull request #1 from build-great-products/george/rename-customers-to-people
