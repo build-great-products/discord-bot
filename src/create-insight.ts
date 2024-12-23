@@ -1,8 +1,11 @@
+import * as roughApi from '@roughapp/sdk'
+
 import type { GuildId, KyselyDb, UserId } from './database.js'
+
+import { getRoughAppUrl } from '#src/env.js'
 
 import { getGuildUser } from './db/guild-user/get-guild-user.js'
 import { getGuild } from './db/guild/get-guild.js'
-import * as roughApi from './rough-api/index.js'
 
 import {
   failure,
@@ -17,13 +20,13 @@ type CreateInsightOptions = {
   userId: UserId
   content: string
   referenceUrl?: string
-  customerName?: string
+  personName?: string
 }
 
 const createInsight = async (
   options: CreateInsightOptions,
 ): Promise<{ success: boolean; reply: Reply }> => {
-  const { db, guildId, userId, content, referenceUrl, customerName } = options
+  const { db, guildId, userId, content, referenceUrl, personName } = options
 
   const guild = await getGuild({ db, where: { guildId } })
   if (guild instanceof Error) {
@@ -38,13 +41,14 @@ const createInsight = async (
   }
 
   let referenceId: string | undefined
-  let customerId: string | undefined
+  let personId: string | undefined
 
   if (referenceUrl) {
     const snippet =
       content.length > 40 ? `${content.trim().slice(0, 40).trim()}…` : content
 
     const reference = await roughApi.createReference({
+      baseUrl: getRoughAppUrl(),
       apiToken,
       name: `Discord: "${snippet}"`,
       url: referenceUrl,
@@ -58,26 +62,28 @@ const createInsight = async (
     referenceId = reference.id
   }
 
-  if (customerName) {
-    const customer = await roughApi.createCustomer({
+  if (personName) {
+    const person = await roughApi.createPerson({
+      baseUrl: getRoughAppUrl(),
       apiToken,
-      name: customerName,
+      name: personName,
     })
-    if (customer instanceof Error) {
+    if (person instanceof Error) {
       return {
         success: false,
-        reply: failure('Could not createCustomer', customer),
+        reply: failure('Could not createPerson', person),
       }
     }
-    customerId = customer.id
+    personId = person.id
   }
 
   const note = await roughApi.createNote({
+    baseUrl: getRoughAppUrl(),
     apiToken,
     content,
     createdByUserId: guildUser.roughUserId,
     referenceId,
-    customerId,
+    personId,
   })
   if (note instanceof Error) {
     return { success: false, reply: failure('Could not createNote', note) }

@@ -1,11 +1,13 @@
+import * as roughApi from '@roughapp/sdk'
+
 import type { ChatInputCommandHandler } from '#src/discord/types.js'
 
 import { failure, warning } from '#src/discord-utils.js'
 
-import * as roughApi from '#src/rough-api/index.js'
-
 import { upsertGuildUser } from '#src/db/guild-user/upsert-guild-user.js'
 import { getGuild } from '#src/db/guild/get-guild.js'
+
+import { getRoughAppUrl } from '#src/env.js'
 
 const onChatInputCommandRoughIdentify: ChatInputCommandHandler = async (
   options,
@@ -29,6 +31,7 @@ const onChatInputCommandRoughIdentify: ChatInputCommandHandler = async (
   }
 
   const user = await roughApi.getUser({
+    baseUrl: getRoughAppUrl(),
     apiToken: guild.apiToken,
     userId: roughUserId,
   })

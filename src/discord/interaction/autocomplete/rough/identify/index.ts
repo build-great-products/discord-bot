@@ -1,6 +1,8 @@
+import * as roughApi from '@roughapp/sdk'
+
 import type { AutocompleteHandler } from '#src/discord/types.js'
 
-import * as roughApi from '#src/rough-api/index.js'
+import { getRoughAppUrl } from '#src/env.js'
 
 import { getGuild } from '#src/db/guild/get-guild.js'
 
@@ -19,6 +21,7 @@ const onAutocompleteRoughIdentify: AutocompleteHandler = async (options) => {
   }
 
   const userList = await roughApi.getUserList({
+    baseUrl: getRoughAppUrl(),
     apiToken: guild.apiToken,
   })
   if (userList instanceof Error) {
