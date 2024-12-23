@@ -17,17 +17,19 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@roughapp/sdk": "1.0.0",
     "@stayradiated/error-boundary": "4.3.0",
-    "better-sqlite3": "11.2.1",
-    "discord.js": "14.15.3",
-    "dotenv": "16.4.5",
-    "kysely": "0.27.4",
-    "zod": "3.23.8"
+    "better-sqlite3": "11.7.0",
+    "discord.js": "14.16.3",
+    "dotenv": "16.4.7",
+    "kysely": "0.27.5",
+    "memoize": "10.0.0",
+    "zod": "3.24.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
-    "@types/better-sqlite3": "7.6.11",
-    "typescript": "5.5.4",
-    "vitest": "2.0.5"
+    "@biomejs/biome": "1.9.4",
+    "@types/better-sqlite3": "7.6.12",
+    "typescript": "5.7.2",
+    "vitest": "2.1.8"
   }
 }

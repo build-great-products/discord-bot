@@ -1,5 +1,4 @@
 import {
-  ApplicationCommandType,
   Client,
   ContextMenuCommandBuilder,
   GatewayIntentBits,
@@ -79,7 +78,7 @@ const createClient = async (options: CreateClientOptions) => {
 
   const contextMenu = new ContextMenuCommandBuilder()
     .setName(joinPrefix(commandPrefix, 'Insight'))
-    .setType(ApplicationCommandType.Message)
+    .setType(3) // ApplicationCommandType.Message
 
   try {
     console.log('Started refreshing application (/) commands.')

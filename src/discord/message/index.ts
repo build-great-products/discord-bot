@@ -45,12 +45,10 @@ const onMessage: MessageHandler = async (options) => {
     return
   }
 
-  const customerName =
-    message.content.replace(/<@\d+>/g, '').trim() || undefined
+  const personName = message.content.replace(/<@\d+>/g, '').trim() || undefined
 
   const referenceMessage =
     await message.channel.messages.fetch(referenceMessageId)
-
 
   let content = referenceMessage.content
   if (content.trim().length === 0) {
@@ -68,7 +66,7 @@ const onMessage: MessageHandler = async (options) => {
     userId,
     content,
     referenceUrl: referenceMessage.url,
-    customerName,
+    personName,
   })
 
   if (success) {

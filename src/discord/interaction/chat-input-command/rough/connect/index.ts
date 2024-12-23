@@ -1,8 +1,10 @@
+import * as roughApi from '@roughapp/sdk'
+
 import type { ChatInputCommandHandler } from '#src/discord/types.js'
 
 import { failure } from '#src/discord-utils.js'
 
-import * as roughApi from '#src/rough-api/index.js'
+import { getRoughAppUrl } from '#src/env.js'
 
 import { upsertGuild } from '#src/db/guild/upsert-guild.js'
 
@@ -17,7 +19,11 @@ const onChatInputCommandRoughConnect: ChatInputCommandHandler = async (
     return
   }
 
-  const roughWorkspace = await roughApi.getCurrentWorkspace({ apiToken })
+  const roughWorkspace = await roughApi.getWorkspace({
+    workspaceId: 'current',
+    baseUrl: getRoughAppUrl(),
+    apiToken,
+  })
   if (roughWorkspace instanceof Error) {
     await interaction.reply(
       failure(
